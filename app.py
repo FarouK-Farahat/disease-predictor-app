@@ -1,9 +1,6 @@
 import streamlit as st
 import joblib
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import numpy as np
 import random
 from collections import Counter
@@ -151,14 +148,6 @@ st.markdown("""
         text-align: center;
     }
     
-    .info-box {
-        background: #f8f9fa;
-        border-left: 5px solid #2E86AB;
-        padding: 1rem;
-        margin: 1rem 0;
-        border-radius: 5px;
-    }
-    
     .team-card {
         background: white;
         padding: 1.5rem;
@@ -181,13 +170,7 @@ st.markdown("""
     .stats-number {
         font-size: 2.5rem;
         font-weight: bold;
-        color: #2E86AB;
-    }
-    
-    .stats-label {
-        font-size: 1rem;
-        color: #666;
-        margin-top: 0.5rem;
+        color: white;
     }
     
     .stButton > button {
@@ -201,11 +184,6 @@ st.markdown("""
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         transition: all 0.3s ease;
         width: 100%;
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
     }
     
     .symptom-chip {
@@ -399,53 +377,32 @@ elif page == "📊 Analytics":
         </div>
         """, unsafe_allow_html=True)
     
-    # Charts
+    # Charts using Streamlit built-in charts
     col1, col2 = st.columns(2)
     
     with col1:
         st.subheader("🦠 Disease Distribution")
-        fig_pie = px.pie(disease_stats, values='Cases', names='Disease', 
-                        title="Distribution of Diseases in Dataset")
-        fig_pie.update_traces(textposition='inside', textinfo='percent+label')
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.bar_chart(disease_stats.set_index('Disease')['Cases'])
     
     with col2:
         st.subheader("📈 Monthly Predictions Trend")
-        fig_line = px.line(monthly_data, x='Month', y='Predictions', 
-                          title="Prediction Trends Over Time",
-                          markers=True)
-        fig_line.update_traces(line_color='#667eea', line_width=3)
-        st.plotly_chart(fig_line, use_container_width=True)
+        st.line_chart(monthly_data.set_index('Month')['Predictions'])
     
     # Symptom frequency chart
     st.subheader("🔍 Most Common Symptoms")
     top_symptoms = symptom_freq.head(15)
-    fig_bar = px.bar(top_symptoms, x='Symptom', y='Frequency', 
-                     title="Frequency of Reported Symptoms",
-                     color='Frequency',
-                     color_continuous_scale='Blues')
-    fig_bar.update_layout(xaxis_tickangle=-45)
-    st.plotly_chart(fig_bar, use_container_width=True)
+    st.bar_chart(top_symptoms.set_index('Symptom')['Frequency'])
     
     # Additional charts
     col1, col2 = st.columns(2)
     
     with col1:
         st.subheader("🎯 Model Accuracy Over Time")
-        fig_accuracy = px.line(monthly_data, x='Month', y='Accuracy', 
-                              title="Prediction Accuracy Trends",
-                              markers=True)
-        fig_accuracy.update_traces(line_color='#11998e', line_width=3)
-        fig_accuracy.update_layout(yaxis_range=[90, 100])
-        st.plotly_chart(fig_accuracy, use_container_width=True)
+        st.line_chart(monthly_data.set_index('Month')['Accuracy'])
     
     with col2:
-        st.subheader("⚡ Recovery Time vs Cases")
-        fig_scatter = px.scatter(disease_stats, x='Cases', y='Recovery_Days', 
-                                size='Cases', color='Severity',
-                                title="Cases vs Recovery Time",
-                                hover_name='Disease')
-        st.plotly_chart(fig_scatter, use_container_width=True)
+        st.subheader("⚡ Recovery Time Analysis")
+        st.bar_chart(disease_stats.set_index('Disease')['Recovery_Days'])
 
 elif page == "📈 Statistics":
     st.markdown('<h1 class="main-header">📈 Detailed Statistics</h1>', unsafe_allow_html=True)
@@ -464,45 +421,17 @@ elif page == "📈 Statistics":
     
     # Detailed tables
     st.subheader("🦠 Disease Statistics")
-    st.dataframe(disease_stats.style.highlight_max(axis=0), use_container_width=True)
+    st.dataframe(disease_stats, use_container_width=True)
     
     col1, col2 = st.columns(2)
     
     with col1:
         st.subheader("🔍 Top 20 Symptoms")
-        st.dataframe(symptom_freq.head(20).style.highlight_max(axis=0), use_container_width=True)
+        st.dataframe(symptom_freq.head(20), use_container_width=True)
     
     with col2:
         st.subheader("📊 Symptoms per Disease")
-        st.dataframe(symptoms_per_disease.style.highlight_max(axis=0), use_container_width=True)
-    
-    # Heatmap
-    st.subheader("🔥 Disease-Symptom Relationship Heatmap")
-    
-    # Create disease-symptom matrix for heatmap
-    unique_diseases = disease_stats['Disease'].tolist()[:8]  # Top 8 diseases
-    top_symptoms = symptom_freq.head(15)['Symptom'].tolist()  # Top 15 symptoms
-    
-    # Create matrix
-    matrix_data = []
-    for disease in unique_diseases:
-        disease_data = df[df['Disease'] == disease]
-        disease_symptoms = []
-        for symptoms_str in disease_data['Symptoms']:
-            disease_symptoms.extend([s.strip() for s in symptoms_str.split(',')])
-        
-        symptom_counts = Counter(disease_symptoms)
-        row = [symptom_counts.get(symptom, 0) for symptom in top_symptoms]
-        matrix_data.append(row)
-    
-    fig_heatmap = px.imshow(matrix_data,
-                           x=top_symptoms,
-                           y=unique_diseases,
-                           title="Disease-Symptom Frequency Matrix",
-                           color_continuous_scale='Reds',
-                           aspect='auto')
-    fig_heatmap.update_layout(height=500)
-    st.plotly_chart(fig_heatmap, use_container_width=True)
+        st.dataframe(symptoms_per_disease, use_container_width=True)
 
 elif page == "📋 Dataset":
     st.markdown('<h1 class="main-header">📋 Dataset Overview</h1>', unsafe_allow_html=True)
@@ -528,18 +457,12 @@ elif page == "📋 Dataset":
     with col1:
         st.markdown("**Symptom Count Distribution**")
         symptom_count_dist = df['Symptom_Count'].value_counts().sort_index()
-        fig_hist = px.bar(x=symptom_count_dist.index, y=symptom_count_dist.values,
-                         title="Distribution of Symptom Counts per Record")
-        fig_hist.update_xaxes(title="Number of Symptoms")
-        fig_hist.update_yaxes(title="Number of Records")
-        st.plotly_chart(fig_hist, use_container_width=True)
+        st.bar_chart(symptom_count_dist)
     
     with col2:
         st.markdown("**Disease Severity Distribution**")
         severity_dist = disease_stats['Severity'].value_counts()
-        fig_severity = px.pie(values=severity_dist.values, names=severity_dist.index,
-                             title="Disease Severity Distribution")
-        st.plotly_chart(fig_severity, use_container_width=True)
+        st.bar_chart(severity_dist)
     
     # Download section
     st.subheader("💾 Download Dataset")
@@ -707,3 +630,42 @@ elif page == "📞 Contact":
         with st.form("contact_form"):
             name = st.text_input("Your Name *")
             email = st.text_input("Your Email *")
+            subject = st.selectbox("Subject", 
+                                 ["General Inquiry", "Technical Support", "Partnership", "Feedback", "Other"])
+            message = st.text_area("Message", height=150)
+            
+            submitted = st.form_submit_button("Send Message")
+            
+            if submitted:
+                if name and email and message:
+                    st.success("✅ Thank you for your message! We'll get back to you within 24 hours.")
+                else:
+                    st.error("❌ Please fill in all required fields.")
+
+# Sidebar additional info
+with st.sidebar:
+    st.markdown("---")
+    st.markdown("## 🆘 Emergency")
+    st.error("""
+    **Call emergency services immediately if you experience:**
+    - Severe chest pain
+    - Difficulty breathing
+    - Loss of consciousness
+    - Severe bleeding
+    """)
+    
+    st.markdown("---")
+    st.markdown("## 📊 Quick Stats")
+    st.info(f"**Total Diseases:** {len(disease_stats)}")
+    st.info(f"**Most Common:** {disease_stats.iloc[0]['Disease']}")
+    st.info(f"**Latest Update:** Today")
+
+# Footer
+st.markdown("---")
+st.markdown("""
+<div style="text-align: center; color: #666; padding: 2rem; background: #f8f9fa; border-radius: 10px; margin-top: 2rem;">
+    <p>🏥 <strong>AI Disease Predictor</strong> | Powered by Advanced Machine Learning</p>
+    <p>© 2024 HealthAI Technologies Inc. All rights reserved.</p>
+    <p><em>This tool is for educational and informational purposes only. Always consult healthcare professionals for medical advice.</em></p>
+</div>
+""", unsafe_allow_html=True)
