@@ -547,39 +547,39 @@ elif page == "👥 Our Team":
     with col1:
         st.markdown("""
         <div class="team-card">
-            <h3>👩‍🔬 Dr. Emily Watson</h3>
+            <h3>👨‍💼 Dr. Farouk Farahat</h3>
             <p><strong>Research Scientist</strong></p>
             <p>PhD Biomedical Engineering<br>
             12+ years Medical Research<br>
             AI Algorithm Development</p>
-            <p>📧 emily.watson@healthai.com<br>
-            🔗 LinkedIn: /in/emilywatson</p>
+            <p>📧 farouk.farahat@healthai.com<br>
+            🔗 LinkedIn: /in/faroukfarahat</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown("""
         <div class="team-card">
-            <h3>👨‍🎨 David Kim</h3>
+            <h3>👨‍🎨 Loay Essam</h3>
             <p><strong>UI/UX Designer</strong></p>
             <p>MS Design & HCI<br>
             6+ years Healthcare UX<br>
             User Experience Specialist</p>
-            <p>📧 david.kim@healthai.com<br>
-            🔗 LinkedIn: /in/davidkim</p>
+            <p>📧 loay.essam@healthai.com<br>
+            🔗 LinkedIn: /in/loayessam</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col3:
         st.markdown("""
         <div class="team-card">
-            <h3>👩‍💼 Lisa Thompson</h3>
+            <h3>👩‍💼 Laurina Salama </h3>
             <p><strong>Product Manager</strong></p>
             <p>MBA Healthcare Management<br>
             9+ years Product Strategy<br>
             Digital Health Innovation</p>
-            <p>📧 lisa.thompson@healthai.com<br>
-            🔗 LinkedIn: /in/lisathompson</p>
+            <p>📧 laurina.salama@healthai.com<br>
+            🔗 LinkedIn: /in/laurinasalama</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -594,10 +594,10 @@ elif page == "📞 Contact":
         <div class="contact-card">
             <h3>🏢 Company Information</h3>
             <p><strong>HealthAI Technologies Inc.</strong></p>
-            <p>📍 123 Medical Center Drive<br>
-            Silicon Valley, CA 94025<br>
-            United States</p>
-            <p>📞 Phone: +1 (555) 123-4567<br>
+            <p>📍 123 North 90 st.<br>
+            New Cairo 94025<br>
+            Egypt</p>
+            <p>📞 Phone: +201208707779<br>
             📧 Email: info@healthai.com<br>
             🌐 Website: www.healthai.com</p>
         </div>
@@ -606,9 +606,9 @@ elif page == "📞 Contact":
         st.markdown("""
         <div class="contact-card">
             <h3>🕒 Business Hours</h3>
-            <p>Monday - Friday: 9:00 AM - 6:00 PM PST<br>
-            Saturday: 10:00 AM - 4:00 PM PST<br>
-            Sunday: Closed</p>
+            <p>Sunday - Thursday: 9:00 AM - 6:00 PM GMT<br>
+            Saturday: 10:00 AM - 4:00 PM GMT<br>
+            Friday: Closed</p>
             <p><strong>Emergency Support:</strong> 24/7</p>
         </div>
         """, unsafe_allow_html=True)
