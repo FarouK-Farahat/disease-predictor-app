@@ -34,7 +34,7 @@ def generate_dataset():
     random.seed(42)
     
     # Generate 150000 rows
-    num_rows = 150000
+    num_rows = 159874
     rows = []
     
     for _ in range(num_rows):
