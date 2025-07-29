@@ -201,37 +201,46 @@ st.markdown(
 
 st.markdown('<div class="main">', unsafe_allow_html=True)
 
-st.markdown('<h1>🩺 Symptom-Based Disease Predictor</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Enter your symptoms below, separated by commas.<br><em>Example: fever, cough, sore throat</em></p>', unsafe_allow_html=True)
+# --- Modernized UI Layout ---
+with st.container():
+    st.markdown('<h1>🩺 Symptom-Based Disease Predictor</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">Enter your symptoms below, separated by commas.<br><em>Example: fever, cough, sore throat</em></p>', unsafe_allow_html=True)
 
-user_input = st.text_input("Symptoms", "")
+    col1, col2 = st.columns([4, 1])
+    with col1:
+        user_input = st.text_input(
+            "Symptoms",
+            "",
+            placeholder="e.g. fever, cough, sore throat",
+            help="Type your symptoms separated by commas. E.g. fever, cough, sore throat"
+        )
+    with col2:
+        predict_clicked = st.button("🔍 Predict", use_container_width=True)
 
 predicted_label = None
-if st.button("🔍 Predict Disease"):
+if predict_clicked:
     if user_input.strip():
         predicted_label = model.predict([user_input])[0]
-        # Show confetti celebration 🎉
         st.balloons()
-        st.markdown(f'<div class="result-box">Most Likely Disease: <span>{predicted_label}</span></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="result-box">\n  <span style="font-size:2.5rem;">✅</span><br>\n  <span style="font-size:1.2rem; color:#334155;">Most Likely Disease:</span><br>\n  <span style="font-size:2.2rem; color:#1e40af; font-weight:900;">{predicted_label}</span>\n</div>', unsafe_allow_html=True)
         update_stats(stats, predicted_label)
-        stats = load_stats()  # reload updated stats
+        stats = load_stats()
     else:
         st.warning("Please enter at least one symptom.")
 
-# Show stats section
+# --- Stats Section ---
 st.markdown('<div class="stats-container">', unsafe_allow_html=True)
 st.markdown('<h2 class="stats-title">📊 Disease Reports So Far</h2>', unsafe_allow_html=True)
 
 if stats:
     max_count = max(stats.values())
     sorted_stats = dict(sorted(stats.items(), key=lambda x: x[1], reverse=True))
-
     for disease, count in sorted_stats.items():
         bar_length = int((count / max_count) * 100)
         st.markdown(
             f"""
             <div class="stat-item">
-                <div class="disease-name">{disease}</div>
+                <div class="disease-name">🦠 {disease}</div>
                 <div class="progress-bar" aria-label="{disease} reports: {count}">
                     <div class="progress-fill" style="width: {bar_length}%;"></div>
                 </div>
