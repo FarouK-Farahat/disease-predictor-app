@@ -38,218 +38,320 @@ model = load_model()
 stats = load_stats()
 
 # Page config
-st.set_page_config(page_title="Disease Predictor", page_icon="🩺", layout="centered")
-
-# Custom CSS for stunning UI
-st.markdown(
-    """
-    <style>
-    /* Background gradient */
-    .main {
-        background: linear-gradient(135deg, #f0f5ff 0%, #dbeafe 100%);
-        min-height: 100vh;
-        padding: 3rem 2rem 5rem 2rem;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: #1e293b;
-    }
-    h1 {
-        text-align: center;
-        font-size: 3.8rem;
-        font-weight: 800;
-        color: #1e40af;
-        margin-bottom: 0.15rem;
-        letter-spacing: 2px;
-        text-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
-    }
-    .subtitle {
-        text-align: center;
-        font-size: 1.3rem;
-        color: #334155;
-        margin-bottom: 3rem;
-        font-weight: 500;
-    }
-    /* Input styling */
-    .stTextInput > div > div > input {
-        border-radius: 18px !important;
-        border: 3px solid #3b82f6 !important;
-        padding: 1rem 1.2rem !important;
-        font-size: 1.3rem !important;
-        box-shadow: 0 0 15px #3b82f6aa;
-        transition: all 0.3s ease;
-        font-weight: 600;
-        letter-spacing: 0.04em;
-        background: #fefefe;
-    }
-    .stTextInput > div > div > input:focus {
-        border-color: #2563eb !important;
-        box-shadow: 0 0 20px #2563ebcc;
-        outline: none !important;
-        background: #fff;
-    }
-    /* Button styling */
-    .stButton > button {
-        background: linear-gradient(90deg, #2563eb, #3b82f6);
-        border: none;
-        border-radius: 20px;
-        color: white;
-        font-size: 1.4rem;
-        padding: 1rem 2.5rem;
-        font-weight: 700;
-        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.5);
-        transition: background 0.4s, box-shadow 0.3s;
-        width: 100%;
-        letter-spacing: 0.05em;
-        cursor: pointer;
-    }
-    .stButton > button:hover {
-        background: linear-gradient(90deg, #1e40af, #2563eb);
-        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.7);
-    }
-    /* Result box */
-    .result-box {
-        background: white;
-        border-radius: 25px;
-        padding: 2rem 3rem;
-        box-shadow: 0 0 30px #3b82f6bb;
-        margin-top: 2rem;
-        text-align: center;
-        font-size: 2.1rem;
-        font-weight: 900;
-        color: #1e40af;
-        letter-spacing: 0.05em;
-        user-select: none;
-        transition: transform 0.3s ease;
-    }
-    .result-box:hover {
-        transform: scale(1.05);
-    }
-    /* Stats container */
-    .stats-container {
-        background: rgba(255,255,255,0.95);
-        border-radius: 25px;
-        padding: 2rem 3rem;
-        box-shadow: 0 0 40px #2563eb55;
-        margin-top: 4rem;
-    }
-    .stats-title {
-        font-size: 2.5rem;
-        font-weight: 900;
-        color: #1e3a8a;
-        margin-bottom: 2rem;
-        text-align: center;
-        letter-spacing: 0.1em;
-        text-shadow: 0 0 8px #2563ebaa;
-    }
-    .stat-item {
-        font-size: 1.3rem;
-        margin-bottom: 1rem;
-        color: #1e40af;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-    /* Progress bar container */
-    .progress-bar {
-        flex-grow: 1;
-        height: 20px;
-        background: #cbd5e1;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: inset 0 0 8px #94a3b8;
-    }
-    /* Progress bar fill */
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #2563eb, #3b82f6);
-        border-radius: 20px 0 0 20px;
-        transition: width 1s ease;
-    }
-    /* Disease name */
-    .disease-name {
-        min-width: 150px;
-        text-align: right;
-        color: #1e40af;
-        font-weight: 800;
-        user-select: text;
-    }
-    /* Responsive tweaks */
-    @media (max-width: 480px) {
-        .result-box {
-            font-size: 1.6rem;
-            padding: 1.5rem 2rem;
-        }
-        .stats-title {
-            font-size: 2rem;
-        }
-        .stat-item {
-            font-size: 1.1rem;
-            flex-direction: column;
-            gap: 0.3rem;
-        }
-        .disease-name {
-            text-align: center;
-            min-width: auto;
-            user-select: none;
-        }
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
+st.set_page_config(
+    page_title="AI Disease Predictor", 
+    page_icon="🏥", 
+    layout="centered",
+    initial_sidebar_state="collapsed"
 )
 
-st.markdown('<div class="main">', unsafe_allow_html=True)
+# Modern, clean CSS styling
+st.markdown("""
+<style>
+    /* Import Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    /* Global styles */
+    .main {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem 1rem;
+    }
+    
+    /* Hide Streamlit branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Container styling */
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 800px;
+    }
+    
+    /* Header section */
+    .header-container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .main-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+        color: #718096;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+    
+    /* Input section */
+    .input-container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stTextInput > div > div > input {
+        border-radius: 12px !important;
+        border: 2px solid #e2e8f0 !important;
+        padding: 1rem !important;
+        font-size: 1rem !important;
+        font-weight: 400 !important;
+        transition: all 0.3s ease !important;
+        background: #ffffff !important;
+    }
+    
+    .stTextInput > div > div > input:focus {
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+        outline: none !important;
+    }
+    
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border: none !important;
+        border-radius: 12px !important;
+        color: white !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        padding: 0.75rem 2rem !important;
+        width: 100% !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+    }
+    
+    /* Result section */
+    .result-container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 2rem 0;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid #48bb78;
+    }
+    
+    .result-title {
+        font-size: 1.2rem;
+        color: #718096;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    
+    .result-disease {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
+    
+    .result-note {
+        font-size: 0.9rem;
+        color: #a0aec0;
+        font-style: italic;
+    }
+    
+    /* Stats section */
+    .stats-container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-top: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stats-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+    
+    .stat-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .stat-item:last-child {
+        border-bottom: none;
+    }
+    
+    .disease-name {
+        font-weight: 600;
+        color: #4a5568;
+        flex: 1;
+    }
+    
+    .progress-container {
+        flex: 2;
+        margin: 0 1rem;
+    }
+    
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 4px;
+        transition: width 0.8s ease;
+    }
+    
+    .stat-count {
+        font-weight: 600;
+        color: #667eea;
+        min-width: 40px;
+        text-align: right;
+    }
+    
+    /* Info message styling */
+    .stInfo {
+        background: rgba(235, 248, 255, 0.95) !important;
+        border-radius: 12px !important;
+        border-left: 4px solid #0ea5e9 !important;
+    }
+    
+    .stWarning {
+        background: rgba(255, 251, 235, 0.95) !important;
+        border-radius: 12px !important;
+        border-left: 4px solid #f59e0b !important;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .main-title {
+            font-size: 2rem;
+        }
+        
+        .input-container, .stats-container, .result-container, .header-container {
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        
+        .progress-container {
+            width: 100%;
+            margin: 0;
+        }
+        
+        .stat-count {
+            align-self: flex-end;
+        }
+    }
+</style>
+""", unsafe_allow_html=True)
 
-st.markdown('<h1>🩺 Symptom-Based Disease Predictor</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Enter your symptoms below, separated by commas.<br><em>Example: fever, cough, sore throat</em></p>', unsafe_allow_html=True)
+# Header section
+st.markdown("""
+<div class="header-container">
+    <div class="main-title">🏥 AI Disease Predictor</div>
+    <div class="subtitle">
+        Get instant predictions based on your symptoms using advanced machine learning.<br>
+        Simply enter your symptoms separated by commas (e.g., "fever, cough, headache")
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
-user_input = st.text_input("Symptoms", "")
+# Input section
+with st.container():
+    st.markdown('<div class="input-container">', unsafe_allow_html=True)
+    
+    user_input = st.text_input(
+        "Enter your symptoms",
+        placeholder="e.g., fever, cough, sore throat, headache",
+        help="Separate multiple symptoms with commas for better accuracy"
+    )
+    
+    predict_button = st.button("🔍 Analyze Symptoms", use_container_width=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
-predicted_label = None
-if st.button("🔍 Predict Disease"):
+# Prediction logic
+if predict_button:
     if user_input.strip():
         predicted_label = model.predict([user_input])[0]
-        # Show confetti celebration 🎉
+        
+        # Show success animation
         st.balloons()
-        st.markdown(f'<div class="result-box">Most Likely Disease: <span>{predicted_label}</span></div>', unsafe_allow_html=True)
+        
+        # Display result
+        st.markdown(f"""
+        <div class="result-container">
+            <div class="result-title">Analysis Complete</div>
+            <div class="result-disease">{predicted_label}</div>
+            <div class="result-note">
+                ⚠️ This is an AI prediction for informational purposes only.<br>
+                Please consult a healthcare professional for proper diagnosis.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Update stats
         update_stats(stats, predicted_label)
         stats = load_stats()  # reload updated stats
     else:
-        st.warning("Please enter at least one symptom.")
+        st.warning("Please enter at least one symptom to get a prediction.")
 
-# Show stats section
+# Statistics section
 st.markdown('<div class="stats-container">', unsafe_allow_html=True)
-st.markdown('<h2 class="stats-title">📊 Disease Reports So Far</h2>', unsafe_allow_html=True)
+st.markdown('<div class="stats-title">📊 Recent Predictions</div>', unsafe_allow_html=True)
 
 if stats:
     max_count = max(stats.values())
     sorted_stats = dict(sorted(stats.items(), key=lambda x: x[1], reverse=True))
-
+    
     for disease, count in sorted_stats.items():
-        bar_length = int((count / max_count) * 100)
-        st.markdown(
-            f"""
-            <div class="stat-item">
-                <div class="disease-name">{disease}</div>
-                <div class="progress-bar" aria-label="{disease} reports: {count}">
-                    <div class="progress-fill" style="width: {bar_length}%;"></div>
+        percentage = int((count / max_count) * 100)
+        
+        st.markdown(f"""
+        <div class="stat-item">
+            <div class="disease-name">{disease}</div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {percentage}%;"></div>
                 </div>
-                <div style="min-width: 45px; text-align: right; font-weight: 700; color: #1e40af;">{count}</div>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
+            <div class="stat-count">{count}</div>
+        </div>
+        """, unsafe_allow_html=True)
 else:
-    st.info("No disease reports yet. Be the first to predict!")
+    st.info("💡 No predictions yet. Be the first to try the disease predictor!")
 
-st.markdown("</div>", unsafe_allow_html=True)
-st.markdown("</div>", unsafe_allow_html=True)
-
-# Remove default Streamlit footer ("Made with Streamlit")
-hide_streamlit_style = """
-            <style>
-            footer {visibility: hidden;}
-            </style>
-            """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
