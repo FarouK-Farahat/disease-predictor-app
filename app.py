@@ -3,6 +3,8 @@ import joblib
 import json
 import os
 import random
+import pandas as pd  # Added for easier data manipulation for the stats chart
+import altair as alt  # Added for beautiful interactive bar chart
 
 MODEL_PATH = "disease_predictor_model.joblib"
 STATS_FILE = "stats.json"
@@ -218,30 +220,44 @@ if st.button("🔍 Predict Disease"):
     else:
         st.warning("Please enter at least one symptom.")
 
-# Show stats section
-st.markdown('<div class="stats-container">', unsafe_allow_html=True)
-st.markdown('<h2 class="stats-title">📊 Disease Reports So Far</h2>', unsafe_allow_html=True)
+"""
+# --- 📊 Stats section --------------------------------------------------------
+"""
 
-if stats:
-    max_count = max(stats.values())
-    sorted_stats = dict(sorted(stats.items(), key=lambda x: x[1], reverse=True))
+# Container for statistics – keeps padding/rounded-corner aesthetic
+with st.container():
+    st.markdown('<div class="stats-container">', unsafe_allow_html=True)
+    st.markdown('<h2 class="stats-title">📊 Disease Reports So Far</h2>', unsafe_allow_html=True)
 
-    for disease, count in sorted_stats.items():
-        bar_length = int((count / max_count) * 100)
-        st.markdown(
-            f"""
-            <div class="stat-item">
-                <div class="disease-name">{disease}</div>
-                <div class="progress-bar" aria-label="{disease} reports: {count}">
-                    <div class="progress-fill" style="width: {bar_length}%;"></div>
-                </div>
-                <div style="min-width: 45px; text-align: right; font-weight: 700; color: #1e40af;">{count}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
+    if stats:
+        # Transform to dataframe for easier charting & sorting
+        df_stats = (
+            pd.DataFrame(list(stats.items()), columns=["Disease", "Reports"])  # type: ignore[arg-type]
+            .sort_values("Reports", ascending=False)
+            .reset_index(drop=True)
         )
-else:
-    st.info("No disease reports yet. Be the first to predict!")
+
+        # Altair horizontal bar chart
+        chart = (
+            alt.Chart(df_stats)
+            .mark_bar(color="#3b82f6")
+            .encode(
+                x=alt.X("Reports:Q", title="Number of Reports"),
+                y=alt.Y("Disease:N", sort="-x", title=""),
+                tooltip=["Disease", "Reports"],
+            )
+            .properties(height=400)
+        )
+
+        st.altair_chart(chart, use_container_width=True)
+
+        # Show underlying numbers in an interactive table for transparency
+        with st.expander("See underlying numbers"):
+            st.dataframe(df_stats, hide_index=True)
+    else:
+        st.info("No disease reports yet. Be the first to predict!")
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("</div>", unsafe_allow_html=True)
