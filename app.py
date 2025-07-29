@@ -201,10 +201,23 @@ st.markdown(
 
 st.markdown('<div class="main">', unsafe_allow_html=True)
 
-st.markdown('<h1>🩺 Symptom-Based Disease Predictor</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Enter your symptoms below, separated by commas.<br><em>Example: fever, cough, sore throat</em></p>', unsafe_allow_html=True)
+# Header Section
+st.markdown('''
+    <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 2.5rem;">
+        <div style="background: linear-gradient(90deg, #2563eb 60%, #3b82f6 100%); border-radius: 30px; box-shadow: 0 8px 32px #3b82f655; padding: 2.5rem 2rem 2rem 2rem; width: 100%; max-width: 600px;">
+            <h1 style="color: #fff; font-size: 3rem; font-weight: 900; margin-bottom: 0.5rem; text-align: center; letter-spacing: 2px; text-shadow: 0 0 12px #1e40af99;">🩺 Symptom-Based Disease Predictor</h1>
+            <p class="subtitle" style="color: #e0e7ef; font-size: 1.2rem; text-align: center; margin-bottom: 0;">Enter your symptoms below, separated by commas.<br><em>Example: fever, cough, sore throat</em></p>
+        </div>
+    </div>
+''', unsafe_allow_html=True)
 
-user_input = st.text_input("Symptoms", "")
+# Input Card
+st.markdown('''
+    <div style="display: flex; justify-content: center;">
+        <div style="background: #fff; border-radius: 25px; box-shadow: 0 4px 24px #2563eb33; padding: 2.5rem 2rem 2rem 2rem; width: 100%; max-width: 500px; margin-bottom: 2rem;">
+''', unsafe_allow_html=True)
+
+user_input = st.text_input("Symptoms", "", placeholder="e.g. fever, cough, sore throat")
 
 predicted_label = None
 if st.button("🔍 Predict Disease"):
@@ -212,32 +225,33 @@ if st.button("🔍 Predict Disease"):
         predicted_label = model.predict([user_input])[0]
         # Show confetti celebration 🎉
         st.balloons()
-        st.markdown(f'<div class="result-box">Most Likely Disease: <span>{predicted_label}</span></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="result-box" style="margin-top: 1.5rem;">Most Likely Disease: <span style="color: #16a34a;">{predicted_label}</span></div>', unsafe_allow_html=True)
         update_stats(stats, predicted_label)
         stats = load_stats()  # reload updated stats
     else:
         st.warning("Please enter at least one symptom.")
 
-# Show stats section
+st.markdown('</div></div>', unsafe_allow_html=True)
+
+# Stats Section
 st.markdown('<div class="stats-container">', unsafe_allow_html=True)
 st.markdown('<h2 class="stats-title">📊 Disease Reports So Far</h2>', unsafe_allow_html=True)
 
 if stats:
     max_count = max(stats.values())
     sorted_stats = dict(sorted(stats.items(), key=lambda x: x[1], reverse=True))
-
     for disease, count in sorted_stats.items():
         bar_length = int((count / max_count) * 100)
         st.markdown(
-            f"""
-            <div class="stat-item">
-                <div class="disease-name">{disease}</div>
-                <div class="progress-bar" aria-label="{disease} reports: {count}">
-                    <div class="progress-fill" style="width: {bar_length}%;"></div>
+            f'''
+            <div class="stat-item" style="background: #f1f5fb; border-radius: 18px; padding: 0.7rem 1.2rem; margin-bottom: 1.2rem; box-shadow: 0 2px 8px #2563eb11;">
+                <div class="disease-name" style="font-size: 1.1rem; color: #1e40af; font-weight: 800; min-width: 120px;">🦠 {disease}</div>
+                <div class="progress-bar" aria-label="{disease} reports: {count}" style="height: 18px; background: #e0e7ef;">
+                    <div class="progress-fill" style="width: {bar_length}%; background: linear-gradient(90deg, #16a34a, #3b82f6); height: 100%; border-radius: 20px 0 0 20px;"></div>
                 </div>
-                <div style="min-width: 45px; text-align: right; font-weight: 700; color: #1e40af;">{count}</div>
+                <div style="min-width: 45px; text-align: right; font-weight: 700; color: #16a34a; font-size: 1.1rem;">{count}</div>
             </div>
-            """,
+            ''',
             unsafe_allow_html=True,
         )
 else:
