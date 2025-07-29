@@ -33,8 +33,8 @@ def generate_dataset():
     # Set seed for reproducibility
     random.seed(42)
     
-    # Generate 1500 rows
-    num_rows = 1500
+    # Generate 150000 rows
+    num_rows = 150000
     rows = []
     
     for _ in range(num_rows):
