@@ -165,12 +165,12 @@ if page == "🏠 Home":
         <div class="result-card">
             <h2>🎯 Prediction Result</h2>
             <h3 style="color: white; margin: 1rem 0;">Predicted Condition:</h3>
-            <h1 style="color: white; font-size: 2.5rem; margin: 0;">{prediction[0]}</h1>
+            <h1 style="color: white; font-size: 2.5rem; margin: 0;">{prediction}</h1>
             <h4 style="color: white; margin-top: 1rem;">Confidence: {confidence_score:.2f}%</h4>
         </div>
         """, unsafe_allow_html=True)
     
-    st.warning("⚠️ **Disclaimer:** This tool is for informational purposes only. It is not a substitute for professional medical advice.", icon="ℹ️")
+    st.warning("⚠️ Disclaimer: This tool is for informational purposes only. It is not a substitute for professional medical advice.", icon="ℹ️")
 
 
 elif page == "📊 Analytics":
@@ -197,8 +197,7 @@ elif page == "📊 Analytics":
         st.bar_chart(chol_dist)
         
     st.subheader("🧑 Age Distribution of Patients")
-    age_hist = pd.DataFrame({'Age': df['Age']})
-    st.bar_chart(age_hist)
+    st.bar_chart(df['Age'].value_counts())
 
 
 elif page == "📋 Dataset":
@@ -231,4 +230,4 @@ st.sidebar.markdown("---")
 st.sidebar.error("""
 **Medical Emergency?**
 If you are experiencing a medical emergency, please call your local emergency number immediately.
-""")```
+""")
